@@ -1,13 +1,66 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("sales")
+  createdAt DateTime @default(now())
+
+  clients   Client[]
+  leads     Lead[]
+  tasks     Task[]
+}
+
+model Client {
+  id          Int      @id @default(autoincrement())
+  companyName String
+  contactName String
+  email       String?
+  phone       String?
+  createdAt   DateTime @default(now())
+
+  ownerId Int
+  owner   User @relation(fields: [ownerId], references: [id])
+
+  deals Deal[]
+}
+
+model Lead {
+  id        Int      @id @default(autoincrement())
+  name      String
+  source    String
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Deal {
+  id        Int      @id @default(autoincrement())
+  value     Float
+  stage     String
+  createdAt DateTime @default(now())
+
+  clientId Int
+  client   Client @relation(fields: [clientId], references: [id])
+}
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  title     String
+  completed Boolean  @default(false)
+  dueDate   DateTime?
+  createdAt DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
