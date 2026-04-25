@@ -26,9 +26,17 @@ app.use(express.json());
 app.use('/api', globalLimiter);
 
 const authRoutes = require('./modules/auth/auth.routes');
+const userRoutes = require('./modules/users/user.routes');
+const clientRoutes = require('./modules/clients/client.routes');
+const taskRoutes = require('./modules/tasks/task.routes');
+const leadRoutes = require('./modules/leads/lead.routes');
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/clients', clientRoutes);
+app.use('/api/tasks', taskRoutes);
+app.use('/api/leads', leadRoutes);
 
 app.get('/api/health', (req, res) => {
     sendResponse(res, 200, 'SalesFlow API running');
