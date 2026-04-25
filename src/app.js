@@ -25,7 +25,11 @@ app.use(express.json());
 // Global Rate Limiter for /api routes
 app.use('/api', globalLimiter);
 
+const authRoutes = require('./modules/auth/auth.routes');
+
 // Routes
+app.use('/api/auth', authRoutes);
+
 app.get('/api/health', (req, res) => {
     sendResponse(res, 200, 'SalesFlow API running');
 });
