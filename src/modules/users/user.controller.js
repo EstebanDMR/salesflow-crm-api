@@ -1,25 +1,30 @@
-const asyncHandler = require('../../shared/middlewares/asyncHandler');
-const sendResponse = require('../../shared/utils/sendResponse');
-const prisma = require('../../shared/lib/prisma');
+const asyncHandler = require('../../middlewares/asyncHandler');
+const sendResponse = require('../../utils/sendResponse');
+const userService = require('./user.service');
 
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await prisma.user.findMany({
-    select: { id: true, name: true, email: true, role: true, createdAt: true }
-  });
-  sendResponse(res, 200, 'Users retrieved successfully', { users });
+  const result = await userService.getAllUsers(req.query);
+  return sendResponse(res, 200, 'Users retrieved successfully', result.users, result.pagination);
+});
+
+const getUserById = asyncHandler(async (req, res) => {
+  const user = await userService.getUserById(req.params.id);
+  return sendResponse(res, 200, 'User retrieved successfully', { user });
+});
+
+const updateUserRole = asyncHandler(async (req, res) => {
+  const user = await userService.updateUserRole(req.params.id, req.body.role);
+  return sendResponse(res, 200, 'User role updated successfully', { user });
 });
 
 const deleteUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  
-  await prisma.user.delete({
-    where: { id: parseInt(id, 10) }
-  });
-  
-  sendResponse(res, 200, 'User deleted successfully');
+  await userService.deleteUser(req.params.id, req.user.id);
+  return sendResponse(res, 200, 'User deleted successfully');
 });
 
 module.exports = {
   getAllUsers,
-  deleteUser
+  getUserById,
+  updateUserRole,
+  deleteUser,
 };
