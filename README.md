@@ -385,6 +385,6 @@ pm2 start src/server.js --name "salesflow-api"
 ---
 
 ## 👤 Autor
-**Esteban DMR** — [GitHub](https://github.com/EstebanDMR)
+**EstebanDMR** — [GitHub](https://github.com/EstebanDMR)
 
 *SalesFlow CRM API — Diseñado con estándares profesionales de código limpio, seguridad y arquitectura escalable.*
