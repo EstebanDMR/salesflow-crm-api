@@ -12,6 +12,11 @@
       "type": "string"
     },
     {
+      "key": "production_url",
+      "value": "https://salesflow-crm-api-n44y.onrender.com/api",
+      "type": "string"
+    },
+    {
       "key": "token",
       "value": "",
       "type": "string"

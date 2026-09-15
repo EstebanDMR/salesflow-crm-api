@@ -5,9 +5,13 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Prisma](https://img.shields.io/badge/Prisma-7.8-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io)
 [![JWT](https://img.shields.io/badge/JWT-Secure_Auth-black?style=for-the-badge&logo=jsonwebtokens)](https://jwt.io)
-[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI_3.0-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](http://localhost:5000/api/docs)
+[![Render](https://img.shields.io/badge/Render-Live_API-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://salesflow-crm-api-n44y.onrender.com)
+[![Swagger](https://img.shields.io/badge/Swagger-Live_Docs-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://salesflow-crm-api-n44y.onrender.com/api/docs)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com)
 [![Jest](https://img.shields.io/badge/Jest-100%25_Passing-C21325?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io)
+
+> 🌐 **Live API URL:** [https://salesflow-crm-api-n44y.onrender.com](https://salesflow-crm-api-n44y.onrender.com)  
+> 📖 **Swagger Docs:** [https://salesflow-crm-api-n44y.onrender.com/api/docs](https://salesflow-crm-api-n44y.onrender.com/api/docs)
 
 Backend robusto, escalable y listo para producción para un **Customer Relationship Management (CRM)** comercial de alto rendimiento. Implementa autenticación segura mediante **JWT**, control de acceso granular basado en roles (**RBAC**), gestión del ciclo de vida de clientes, pipeline de leads, analítica de deals/ventas, agenda comercial de tareas, validaciones estrictas con **Zod**, observabilidad estructurada con **Pino**, capa de seguridad perimetral con **Helmet / CORS / Rate Limiting**, y documentación interactiva en **Swagger**.
 
@@ -324,11 +328,14 @@ npm run test:coverage
 
 ## 📖 Documentación Swagger OpenAPI
 
-La documentación completa interactiva está disponible al correr el servidor en:
+La documentación interactiva en vivo en producción está disponible en:
+👉 **[https://salesflow-crm-api-n44y.onrender.com/api/docs](https://salesflow-crm-api-n44y.onrender.com/api/docs)**
+
+En entorno local, disponible al correr el servidor en:
 👉 **`http://localhost:5000/api/docs`**
 
 También puedes obtener la especificación OpenAPI 3.0 en formato JSON directamente en:
-👉 **`http://localhost:5000/api/docs/swagger.json`**
+👉 **[https://salesflow-crm-api-n44y.onrender.com/api/docs/swagger.json](https://salesflow-crm-api-n44y.onrender.com/api/docs/swagger.json)** (o `http://localhost:5000/api/docs/swagger.json`)
 
 ---
 
@@ -345,6 +352,11 @@ El repositorio incluye el archivo listo para importar en Postman:
 ---
 
 ## 🚀 Guía de Despliegue en Producción
+
+### 🌐 Despliegue Activo en Render
+- **Live API URL:** [https://salesflow-crm-api-n44y.onrender.com](https://salesflow-crm-api-n44y.onrender.com)
+- **Swagger Docs:** [https://salesflow-crm-api-n44y.onrender.com/api/docs](https://salesflow-crm-api-n44y.onrender.com/api/docs)
+- **Health Check:** [https://salesflow-crm-api-n44y.onrender.com/api/health](https://salesflow-crm-api-n44y.onrender.com/api/health)
 
 ### Opción 1: Render (Recomendada con `render.yaml`)
 1. Crea una cuenta en [Render.com](https://render.com).
