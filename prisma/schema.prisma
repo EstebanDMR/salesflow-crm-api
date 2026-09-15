@@ -11,12 +11,16 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      String   @default("sales")
+  role      String   @default("sales") // "admin" | "manager" | "sales"
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-  clients   Client[]
-  leads     Lead[]
-  tasks     Task[]
+  clients Client[]
+  leads   Lead[]
+  deals   Deal[]
+  tasks   Task[]
+
+  @@index([role])
 }
 
 model Client {
@@ -26,41 +30,65 @@ model Client {
   email       String?
   phone       String?
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 
   ownerId Int
-  owner   User @relation(fields: [ownerId], references: [id])
+  owner   User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   deals Deal[]
+
+  @@index([ownerId])
+  @@index([companyName])
 }
 
 model Lead {
   id        Int      @id @default(autoincrement())
   name      String
   source    String
-  status    String   @default("new")
+  status    String   @default("new") // "new" | "contacted" | "qualified" | "lost" | "won"
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   userId Int
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
 }
 
 model Deal {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
+  title     String?
   value     Float
-  stage     String
-  createdAt DateTime @default(now())
+  stage     String    @default("lead") // "lead" | "contacted" | "proposal" | "negotiation" | "won" | "lost"
+  closeDate DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
 
   clientId Int
-  client   Client @relation(fields: [clientId], references: [id])
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([userId])
+  @@index([stage])
 }
 
 model Task {
-  id        Int      @id @default(autoincrement())
-  title     String
-  completed Boolean  @default(false)
-  dueDate   DateTime?
-  createdAt DateTime @default(now())
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  completed   Boolean   @default(false)
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
 
   userId Int
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([completed])
+  @@index([dueDate])
 }

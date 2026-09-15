@@ -6,13 +6,16 @@ const isDev = env.nodeEnv === 'development';
 
 const logger = pino({
   level: isDev ? 'debug' : 'info',
-  transport: isDev ? {
-    target: 'pino-pretty',
-    options: {
-      colorize: true,
-      translateTime: 'SYS:standard'
-    }
-  } : undefined,
+  transport: isDev
+    ? {
+        target: 'pino-pretty',
+        options: {
+          colorize: true,
+          translateTime: 'SYS:standard',
+          ignore: 'pid,hostname',
+        },
+      }
+    : undefined,
 });
 
 const httpLogger = pinoHttp({
@@ -26,15 +29,22 @@ const httpLogger = pinoHttp({
     }
     return 'info';
   },
+  customSuccessMessage: function (req, res) {
+    return `${req.method} ${req.url} completed with status ${res.statusCode}`;
+  },
+  customErrorMessage: function (req, res, err) {
+    return `${req.method} ${req.url} failed with error: ${err.message}`;
+  },
   serializers: {
     req: (req) => ({
+      id: req.id,
       method: req.method,
-      url: req.url
+      url: req.url,
     }),
     res: (res) => ({
-      statusCode: res.statusCode
-    })
-  }
+      statusCode: res.statusCode,
+    }),
+  },
 });
 
 module.exports = { logger, httpLogger };

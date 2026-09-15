@@ -1,51 +1,70 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const swaggerUi = require('swagger-ui-express');
 
-const { httpLogger } = require('./shared/lib/logger');
-const globalLimiter = require('./shared/middlewares/rateLimiter');
-const notFound = require('./shared/middlewares/notFound');
-const errorHandler = require('./shared/middlewares/errorHandler');
-const sendResponse = require('./shared/utils/sendResponse');
+const env = require('./config/env');
+const swaggerSpec = require('./config/swagger');
+const { httpLogger } = require('./utils/logger');
+const { globalLimiter } = require('./middlewares/rateLimiter');
+const notFound = require('./middlewares/notFound');
+const errorHandler = require('./middlewares/errorHandler');
+const apiRoutes = require('./routes/index');
 
 const app = express();
 
-// HTTP request logger
+// HTTP request logging with Pino
 app.use(httpLogger);
 
-// Security Headers
-app.use(helmet());
+// Security HTTP headers
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // Allows Swagger UI inline assets
+  })
+);
 
-// CORS
-app.use(cors());
+// Cross-Origin Resource Sharing
+app.use(
+  cors({
+    origin: env.corsOrigin === '*' ? true : env.corsOrigin,
+    credentials: true,
+  })
+);
 
 // Body parser
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-// Global Rate Limiter for /api routes
+// Global Rate Limiting
 app.use('/api', globalLimiter);
 
-const authRoutes = require('./modules/auth/auth.routes');
-const userRoutes = require('./modules/users/user.routes');
-const clientRoutes = require('./modules/clients/client.routes');
-const taskRoutes = require('./modules/tasks/task.routes');
-const leadRoutes = require('./modules/leads/lead.routes');
-
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/clients', clientRoutes);
-app.use('/api/tasks', taskRoutes);
-app.use('/api/leads', leadRoutes);
-
-app.get('/api/health', (req, res) => {
-    sendResponse(res, 200, 'SalesFlow API running');
+// Swagger Interactive API Documentation
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customSiteTitle: 'SalesFlow CRM API Docs',
+  customCss: '.swagger-ui .topbar { display: none }',
+}));
+app.get('/api/docs/swagger.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
 });
 
-// Handle 404 - Not Found
-app.all('*', notFound);
+// API Routes
+app.use('/api', apiRoutes);
 
-// Global Error Handler
+// Root Welcome Route
+app.get('/', (req, res) => {
+  res.status(200).json({
+    name: 'SalesFlow CRM API',
+    version: '1.0.0',
+    documentation: '/api/docs',
+    health: '/api/health',
+  });
+});
+
+// 404 Handler
+app.use(notFound);
+
+// Global Centralized Error Handler
 app.use(errorHandler);
 
 module.exports = app;
